@@ -1,8 +1,8 @@
 import tensorflow as tf
 
 
-class Conv2d(tf.keras.layers):
-    def __init__(self,filter_size, kernel_size, strides = 1, padding = "same", activation = 'lrelu', alpha = 0.1):
+class Conv2d(tf.keras.layers.Layer):
+    def __init__(self, filter_size, kernel_size, strides = 1, padding = "same", activation = 'lrelu', alpha = 0.1):
         super().__init__()
         self.conv = tf.keras.layers.Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding, strides=strides)
         # self.LRelu_Activation = tf.keras.layers.LeakyReLU(alpha=alpha)
@@ -19,8 +19,10 @@ class Conv2d(tf.keras.layers):
         return x
 
 
-def YoloV1_(input_size = 416):
-    input = tf.keras.layers.Input(shape=(input_size,input_size,3))
+def YoloV1_(input_size = 448):
+    inputs = tf.keras.layers.Input(shape=(input_size, input_size, 3))
+    x = inputs
+    x = Conv2d(64, 7, strides=2)(x)
     x = Conv2d(64,7)(x)
     x = tf.keras.layers.MaxPool2D(strides=(2,2),padding="same")
     x = Conv2d(192,3)(x)
@@ -67,10 +69,11 @@ def YoloV1_(input_size = 416):
 
     x = tf.keras.layers.Flatten()(x)
 
-    x = tf.keras.layers.Dense(4096,activation="leaky_relu")(x)
+    x = tf.keras.layers.Dense(4096)(x)
+    x = tf.keras.layers.LeakyReLU(alpha=0.1)(x)
     x = tf.keras.layers.Dropout(.5)(x)
     x = tf.keras.layers.Dense(7 * 7 * 30)(x)
-    output = tf.keras.layers.Reshape((7, 7, 30))(x)
+    output = tf.keras.layers.Reshape((7, 7, 30))(x) # back into the tensor 
     return tf.keras.Model(inputs=input, outputs=output)
 
 
