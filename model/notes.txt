@@ -1,0 +1,36 @@
+start new:
+tmux
+
+start new with session name:
+tmux new -s myname
+
+attach:
+tmux a  #  (or at, or attach)
+
+attach to named:
+tmux a -t myname
+
+list sessions:
+tmux ls
+
+kill session:
+tmux kill-session -t myname
+
+
+Bash command:
+srun --gpus=1 --nodes=1 --time=05:00:00 --cpus-per-task=4 --pty bash
+
+In this command:
+• --gpus=1 specifies the number of GPUs to request. (max is 1)
+• --nodes=1 requests one compute node. (max is 1)
+• --time=05:00:00 sets the maximum wall time for the job to 5 hours.
+• --cpus-per-task=4 allocates 4 CPU cores for the task. (max is 4)
+--pty bash starts an interactive shell session on the allocated resources.
+
+Conda command:
+conda activate <env name>
+
+
+Try quantization
+pruining
+residual
